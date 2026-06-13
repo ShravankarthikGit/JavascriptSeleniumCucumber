@@ -25,5 +25,11 @@
     "csv-parse": "^5.5.6",
     "dotenv": "^16.4.5",
     "selenium-webdriver": "^4.22.0"
-  }
+  },
+  "compilerOptions": {
+    "module": "NodeNext",
+    "target": "ES2022",
+    "checkJs": true
+  },
+  "exclude": ["node_modules"]
 }

@@ -5,8 +5,8 @@ class HomePage {
         this.driver = driver;
         this.timeout = 10000; // 10-second explicit wait window
 
-        this.lnkMyaccount = By.xpath("//span[text()='My Account']");
-        this.lnkRegister = By.linkText("Register");
+        this.lnkMyaccount = By.xpath("//span[normalize-space()='My Account']");
+        this.lnkRegister = By.xpath("//a[normalize-space()='Register']");
         this.linkLogin = By.linkText("Login");
         this.txtSearchbox = By.xpath("//input[@placeholder='Search']");
         this.btnSearch = By.xpath("//div[@id='search']//button[@type='button']");
