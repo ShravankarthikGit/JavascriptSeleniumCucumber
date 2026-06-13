@@ -1,0 +1,40 @@
+# Dependency Directories
+node_modules/
+jspm_packages/
+
+# Test Run Artifacts & Outputs
+*artifact*
+*.png
+*.jpeg
+*.jpg
+reports/
+allure-results/
+allure-report/
+cucumber-report.json
+cucumber-report.html
+
+# Logs and Runtime Identifiers
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+logs/
+*.log
+
+# Local Environment and Configuration Overrides
+.env
+.env.local
+.env.*.local
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+
+# IDE and Code Editors Configuration Directories
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp

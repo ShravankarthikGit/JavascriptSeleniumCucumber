@@ -1,0 +1,16 @@
+Feature: OpenCart User Authentication Lifecycle # features\login.feature:1
+
+  Scenario: Successful customer login using system credentials # features\login.feature:3
+    Given the user navigates to login page
+    When the user enters credentials and logs in
+    Then the user should be redirected to the My Account page
+
+Feature: OpenCart Product Catalog Search and Checkout Management # features\search.feature:1
+
+  Scenario: Verify customer can search products and add them to the cart via bulk CSV data # features\search.feature:3
+    Given I read catalog inputs from CSV file "products.csv"
+    Then I verify each product item sequentially in the storefront
+
+2 scenarios (2 passed)
+5 steps (5 passed)
+0m14.400s (executing steps: 0m14.364s)

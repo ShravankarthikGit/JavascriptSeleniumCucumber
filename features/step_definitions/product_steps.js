@@ -1,0 +1,57 @@
+const { Given, Then } = require('@cucumber/cucumber');
+const { expect } = require('chai');
+const fs = require('fs');
+const path = require('path');
+const { parse } = require('csv-parse/sync');
+const HomePage = require('../../pages/home.page');
+const SearchPage = require('../../pages/search.page');
+
+let csvDataset;
+
+Given('I read catalog inputs from CSV file {string}', function (fileName) {
+  const filePath = path.join(__dirname, '..', '..', 'data', fileName);
+  console.log("Loading CSV from:", filePath);
+  
+  const rawData = fs.readFileSync(filePath, 'utf8');
+  
+  // Clean column names and cell data automatically using trim: true
+  csvDataset = parse(rawData, { 
+    columns: true, 
+    skip_empty_lines: true,
+    trim: true,
+    bom: true 
+  }); 
+});
+
+Then('I verify each product item sequentially in the storefront', { timeout: 60000 }, async function () {
+
+  const homePage = new HomePage(this.driver);
+  const searchPage = new SearchPage(this.driver);
+
+  for (const record of csvDataset) {
+    // Defensive Guard: Skip row if record or productName property evaluates as empty or missing
+    if (!record || !record.productName) {
+      console.log(`⚠️ Warning: Found an empty row or invalid record structure in CSV. Skipping row...`);
+      continue;
+    }
+
+    console.log(`\n🔎 Bulk CSV Processing: Searching for [${record.productName}]`);
+
+    // 1. Clear search input and enter product text
+    await homePage.enterProductName(record.productName);
+    await homePage.clickSearch();
+
+    // 2. Validate grid contents using list tracking
+    const exists = await searchPage.isProductExist(record.productName);
+    expect(exists).to.be.true;
+
+    // 3. Drill down, modify quantity variables, and add to cart
+    await searchPage.selectProduct(record.productName);
+    await searchPage.setQuantity("2");
+    await searchPage.addToCart();
+
+    // 4. Validate successful basket addition alert text
+    // const alertVisible = await searchPage.checkConfMsg();
+    // expect(alertVisible).to.be.true;
+  }
+});

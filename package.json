@@ -1,0 +1,29 @@
+{
+  "name": "javascriptseleniumcucumber",
+  "version": "1.0.0",
+  "description": "JavaScript Selenium Cucumber Page Object Model Framework",
+  "main": "index.js",
+  "scripts": {
+    "test": "cucumber-js --format @cucumber/pretty-formatter",
+    "test:single": "cucumber-js features/login.feature --format @cucumber/pretty-formatter",
+    "test:dry": "cucumber-js --dry-run"
+  },
+  "keywords": [
+    "selenium",
+    "cucumber",
+    "javascript",
+    "automation",
+    "pom",
+    "bdd"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@cucumber/cucumber": "^10.0.1",
+    "@cucumber/pretty-formatter": "^1.0.1",
+    "chai": "^4.4.1",
+    "csv-parse": "^5.5.6",
+    "dotenv": "^16.4.5",
+    "selenium-webdriver": "^4.22.0"
+  }
+}
