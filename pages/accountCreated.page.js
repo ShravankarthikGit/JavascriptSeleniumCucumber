@@ -1,4 +1,5 @@
-const { Key, By , Builder, until} = require("selenium-webdriver");
+import { Key, By, Builder, until } from "selenium-webdriver";
+import { expect } from 'chai';
 
 
 class AccountCreatedPage{
@@ -15,8 +16,8 @@ class AccountCreatedPage{
         const element = await this.driver.wait(until.elementLocated(this.accountCreatedText), this.timeout);
         const actualText = await element.getText();
         // Pass the raw string variable into your assertion
-        expect(actualText.toLowerCase()).to.include('Your Account Has Been Created!');
+        expect(actualText.toLowerCase()).to.include('your account has been created!');
     }
 }
 
-module.exports = AccountCreatedPage;
+export default AccountCreatedPage;

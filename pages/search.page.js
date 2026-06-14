@@ -1,4 +1,4 @@
-const { By, until } = require('selenium-webdriver');
+import { By, until } from 'selenium-webdriver';
 
 // 1. Group locators in a plain object at the top (No "this." clutter)
 const locators = {
@@ -73,4 +73,4 @@ class SearchPage {
     // }
 }
 
-module.exports = SearchPage;
+export default SearchPage;

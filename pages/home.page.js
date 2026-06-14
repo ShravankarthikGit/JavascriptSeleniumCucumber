@@ -1,6 +1,9 @@
-const { By, until } = require('selenium-webdriver');
+import { By, until } from 'selenium-webdriver';
 
 class HomePage {
+    /**
+   * @param {WebDriver} driver 
+   */
     constructor(driver) {
         this.driver = driver;
         this.timeout = 10000; // 10-second explicit wait window
@@ -39,4 +42,4 @@ class HomePage {
     }
 }
 
-module.exports = HomePage;
+export default HomePage;

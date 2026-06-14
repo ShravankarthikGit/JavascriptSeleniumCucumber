@@ -1,35 +1,21 @@
 {
   "name": "javascriptseleniumcucumber",
   "version": "1.0.0",
-  "description": "JavaScript Selenium Cucumber Page Object Model Framework",
-  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "cucumber-js --format @cucumber/pretty-formatter",
-    "test:single": "cucumber-js features/login.feature --format @cucumber/pretty-formatter",
-    "test:dry": "cucumber-js --dry-run"
+    "test:allure": "cucumber-js --format summary --format allure-cucumberjs/reporter",
+    "allure:generate": "allure generate allure-results --clean",
+    "allure:open": "allure open allure-report"
   },
-  "keywords": [
-    "selenium",
-    "cucumber",
-    "javascript",
-    "automation",
-    "pom",
-    "bdd"
-  ],
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
-    "@cucumber/cucumber": "^10.0.1",
-    "@cucumber/pretty-formatter": "^1.0.1",
+    "@cucumber/cucumber": "^13.0.0",
+    "allure-commandline": "^2.42.1",
+    "allure-cucumberjs": "^3.10.0",
     "chai": "^4.4.1",
     "csv-parse": "^5.5.6",
+    "cucumber-pretty": "^6.0.1",
     "dotenv": "^16.4.5",
+    "multiple-cucumber-html-reporter": "^3.8.0",
     "selenium-webdriver": "^4.22.0"
-  },
-  "compilerOptions": {
-    "module": "NodeNext",
-    "target": "ES2022",
-    "checkJs": true
-  },
-  "exclude": ["node_modules"]
+  }
 }

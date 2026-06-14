@@ -1,10 +1,11 @@
-const { Given, When, Then } = require('@cucumber/cucumber');
-const { expect } = require('chai');
+import { Given, When, Then } from '@cucumber/cucumber';
+import { expect } from 'chai';
 
-// 1. Import your Page Object classes cleanly (no duplicates)
-const HomePage = require('../../pages/home.page');
-const LoginPage = require('../../pages/login.page');
-const MyAccountPage = require('../../pages/myAccount.page');
+// ✅ Modern ESM Imports (Note the mandatory '.js' file extensions)
+import HomePage from '../../pages/home.page.js';
+import LoginPage from '../../pages/login.page.js';
+import MyAccountPage from '../../pages/myAccount.page.js';
+
 
 Given('the user navigates to login page', async function () {
     // Instantiate the page object using the browser driver context shared from hooks.js
@@ -21,6 +22,19 @@ When('the user enters credentials and logs in', async function () {
     // Pull credentials directly from your .env environment configurations
     const userEmail = process.env.EMAIL || 'pavanoltraining@gmail.com';
     const userPassword = process.env.PASSWORD || 'test@123';
+
+    // Call your exact step actions sequentially
+    await loginPage.setEmail(userEmail);
+    await loginPage.setPassword(userPassword);
+    await loginPage.clickLogin();
+});
+
+When('the user enters invalid credentials and logs in', async function () {
+    const loginPage = new LoginPage(this.driver);
+
+    // Pull credentials directly from your .env environment configurations
+    const userEmail = process.env.EMAIL || 'pavano@gmail.com';
+    const userPassword = process.env.PASSWORD || 'testttt@123';
 
     // Call your exact step actions sequentially
     await loginPage.setEmail(userEmail);

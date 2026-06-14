@@ -1,4 +1,4 @@
-const { Key, By , Builder, until} = require("selenium-webdriver");
+import { By, until } from 'selenium-webdriver';
 
 
 class RegistrationPage{
@@ -19,39 +19,34 @@ class RegistrationPage{
         this.continueButton = By.xpath("//input[@value='Continue']");
     }
 
-    async enterFirstname(){
+    async enterFirstname(fname){
         const element = await this.driver.wait(until.elementLocated(this.firstName), this.timeout)
-        await element.sendKeys("ramu")
+        await element.sendKeys(fname)
     };
 
-    async enterLastName(){
+    async enterLastName(lname){
         const element = await this.driver.wait(until.elementLocated(this.lastName), this.timeout);
-        await element.sendKeys("ramu")
+        await element.sendKeys(lname)
     };
 
-    async enterEmail(){
+    async enterEmail(emailid){
         const element = await this.driver.wait(until.elementLocated(this.email), this.timeout);
-        await element.sendKeys("test33@gmail.com");
+        await element.sendKeys(emailid);
     }
 
-    async enterTelephone(){
+    async enterTelephone(mobilenum){
         const element = await this.driver.wait(until.elementLocated(this.telephone), this.timeout);
-        await element.sendKeys("7786654444");
+        await element.sendKeys(mobilenum);
     }
 
-    async enterPassword(){
+    async enterPassword(pass){
         const element = await this.driver.wait(until.elementLocated(this.password), this.timeout)
-        await element.sendKeys("password");
+        await element.sendKeys(pass);
     }
 
-    async enterPassword(){
-        const element = await this.driver.wait(until.elementLocated(this.password), this.timeout)
-        await element.sendKeys("password");
-    }
-
-    async enterConfirmPassword(){
+    async enterConfirmPassword(pass){
         const element = await this.driver.wait(until.elementLocated(this.confirmPassword), this.timeout)
-        await element.sendKeys("password");
+        await element.sendKeys(pass);
     }
 
     async clickUnsubscribe(){
@@ -71,4 +66,4 @@ class RegistrationPage{
 
 }
 
-module.exports = RegistrationPage;
+export default RegistrationPage;

@@ -1,19 +1,13 @@
-module.exports = {
+console.log('*** LOADING CUCUMBER CONFIG ***');
+
+export default {
   default: {
     paths: ['features/**/*.feature'],
-    require: [
+    import: [
       'features/step_definitions/**/*.js',
       'features/support/**/*.js'
     ],
-    requireModule: ['dotenv/config'],
-    
-    // FIXED: Only one formatter controls stdout. Reports are routed to physical files.
-    format: [
-      ['@cucumber/pretty-formatter', 'stdout'],
-      ['html', 'reports/cucumber-report.html'],
-      ['json', 'reports/cucumber-results.json']
-    ],
-    
+    retry: 2,
     parallel: 0
   }
 };

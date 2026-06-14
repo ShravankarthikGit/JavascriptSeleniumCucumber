@@ -1,6 +1,8 @@
 
-const { Before, After, AfterStep, Status } = require('@cucumber/cucumber');
-const DriverConfig = require('../../config/driver.config');
+import { Before, After, AfterStep, Status } from '@cucumber/cucumber'; 
+
+// ✅ FIX: Converted to import statement and added mandatory '.js' extension
+import DriverConfig from '../../config/driver.config.js';
 
 
 Before(async function () {

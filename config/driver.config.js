@@ -1,91 +1,82 @@
-// Load the environment variables from the .env file at the very start
-require('dotenv').config(); 
+// Load the environment variables from the .env file at the very start 
+import 'dotenv/config'; // Automatically loads environment variables instantly 
+import { Builder, Browser, Capabilities } from 'selenium-webdriver'; 
 
-const { Builder } = require('selenium-webdriver');
-const chrome = require('selenium-webdriver/chrome');
-const firefox = require('selenium-webdriver/firefox');
-const edge = require('selenium-webdriver/edge');
+class DriverConfig { 
+  static async initializeBrowser() { 
+    // Read directly from process.env (values fall back to defaults if missing) 
+    const executionEnv = (process.env.EXECUTION_ENV || 'local').toLowerCase(); 
+    const browser = (process.env.BROWSER || 'chrome').toLowerCase(); 
+    const os = (process.env.OS || 'windows').toLowerCase(); 
+    const remoteUrl = process.env.REMOTE_URL || 'http://localhost:4444/wd/hub'; 
 
-class DriverConfig {
-    static driver = null;
+    let builder = new Builder(); 
 
-    static async initializeBrowser() {
-        // Read directly from process.env (values fall back to defaults if missing)
-        const executionEnv = (process.env.EXECUTION_ENV || 'local').toLowerCase();
-        const browser = (process.env.BROWSER || 'chrome').toLowerCase();
-        const os = (process.env.OS || 'windows').toLowerCase();
-        const remoteUrl = process.env.REMOTE_URL || 'http://localhost:4444/wd/hub';
+    // Resolve specific browser targets to standard Selenium constants
+    let targetBrowser;
+    if (browser === 'chrome') targetBrowser = Browser.CHROME;
+    else if (browser === 'firefox') targetBrowser = Browser.FIREFOX;
+    else if (browser === 'edge') targetBrowser = Browser.EDGE;
+    else throw new Error(`Unsupported Browser Selected: ${browser}`);
 
-        let builder = new Builder();
+    // 1. Handle Selenium Grid Remote Mode 
+    if (executionEnv === 'remote') { 
+      let platform; 
+      if (os === 'windows') platform = 'WINDOWS'; 
+      else if (os === 'mac') platform = 'MAC'; 
+      else if (os === 'linux') platform = 'LINUX'; 
+      else throw new Error(`Unsupported Remote OS Platform: ${os}`); 
 
-        // 1. Handle Selenium Grid Remote Mode
-        if (executionEnv === 'remote') {
-            builder = builder.usingServer(remoteUrl).forBrowser(browser);
-            
-            let platform;
-            if (os === 'windows') platform = 'WINDOWS';
-            else if (os === 'mac') platform = 'MAC';
-            else if (os === 'linux') platform = 'LINUX';
-            else throw new Error(`Unsupported Remote OS Platform: ${os}`);
+      const caps = new Capabilities();
+      caps.setBrowserName(targetBrowser);
+      caps.setPlatform(platform);
 
-            if (browser === 'chrome') {
-                builder = builder.setChromeOptions(new chrome.Options().setPlatform(platform));
-            } else if (browser === 'firefox') {
-                builder = builder.setFirefoxOptions(new firefox.Options().setPlatform(platform));
-            } else if (browser === 'edge') {
-                builder = builder.setEdgeOptions(new edge.Options().setPlatform(platform));
-            }
+      builder = builder.usingServer(remoteUrl).withCapabilities(caps);
 
-        // 2. Handle Local Execution Mode
-        } else if (executionEnv === 'local') {
-            if (browser === 'chrome') {
-                builder = builder.forBrowser('chrome');
-            } else if (browser === 'firefox') {
-                builder = builder.forBrowser('firefox');
-            } else if (browser === 'edge') {
-                builder = builder.forBrowser('MicrosoftEdge');
-            } else {
-                throw new Error(`Unsupported Local Browser: ${browser}`);
-            }
-        }
+    // 2. Handle Local Execution Mode 
+    } else if (executionEnv === 'local') { 
+      builder = builder.forBrowser(targetBrowser); 
+    } 
 
-        this.driver = await builder.build();
+    // Build the initialized driver instance
+    this.driver = await builder.build(); 
 
-        // 3. Set standard cookies and window states
-        await this.driver.manage().deleteAllCookies();
-        await this.driver.manage().window().maximize();
+    // 3. Set standard cookies and window states 
+    await this.driver.manage().deleteAllCookies(); 
+    await this.driver.manage().window().maximize(); 
 
-        // Set global timeouts
-        await this.driver.manage().setTimeouts({ 
-            implicit: 10000, 
-            pageLoad: 5000 
-        });
+    // Set global timeouts 
+    await this.driver.manage().setTimeouts({ implicit: 10000, pageLoad: 15000 }); 
+    return this.driver; 
+  } 
 
-        return this.driver;
-    }
+  static getDriver() { 
+    return this.driver; 
+  } 
 
-    static getDriver() {
-        return this.driver;
-    }
+  // Reusable random alpha/numeric string helpers 
+  static randomString(length = 5) { 
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'; 
+    let result = ''; 
+    for (let i = 0; i < length; i++) result += chars.charAt(Math.floor(Math.random() * chars.length)); 
+    return result; 
+  } 
 
-    // Reusable random alpha/numeric string helpers
-    static randomString(length = 5) {
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-        let result = '';
-        for (let i = 0; i < length; i++) result += chars.charAt(Math.floor(Math.random() * chars.length));
-        return result;
-    }
+  static randomNumber(length = 10) { 
+    const chars = '0123456789'; 
+    let result = ''; 
+    for (let i = 0; i < length; i++) result += chars.charAt(Math.floor(Math.random() * chars.length)); 
+    return result; 
+  } 
 
-    static randomNumber(length = 10) {
-        const chars = '0123456789';
-        let result = '';
-        for (let i = 0; i < length; i++) result += chars.charAt(Math.floor(Math.random() * chars.length));
-        return result;
-    }
+  static randomAlphaNumeric() { 
+    return this.randomString(5) + this.randomNumber(10); 
+  } 
+} 
 
-    static randomAlphaNumeric() {
-        return this.randomString(5) + this.randomNumber(10);
-    }
-}
+// ✅ FIX: Define the static property dynamically down here.
+// This allows pure JavaScript to modify it later without any type locks.
+DriverConfig.driver = null;
 
-module.exports = DriverConfig;
+// Export configuration out natively 
+export default DriverConfig;

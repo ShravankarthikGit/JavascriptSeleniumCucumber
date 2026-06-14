@@ -1,4 +1,4 @@
-const { By, until } = require('selenium-webdriver');
+import { By, until } from 'selenium-webdriver';
 
 class MyAccountPage {
     constructor(driver) {
@@ -27,4 +27,4 @@ class MyAccountPage {
     }
 }
 
-module.exports = MyAccountPage;
+export default MyAccountPage;
