@@ -28,6 +28,11 @@ class LoginPage {
         const element = await this.driver.wait(until.elementLocated(loginLocators.btnLogin), this.timeout);
         await element.click();
     }
+
+    async loginAlertText() {
+        const element = await this.driver.wait(until.elementLocated(loginLocators.loginAlert), this.timeout);
+        return await element.getText()
+    }
 }
 
 export default LoginPage;
