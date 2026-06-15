@@ -18,7 +18,18 @@ When('User opens a new tab and navigates to Google', async function () {
     await googleSearch.openGoogleSearch()
 });
 
-When('User searches for {string} in the new tab', async function (searchWord) {
+When('User opens a new window and navigates to Google', async function () {
+    // Track your current main application window handle
+    this.mainWindow = await this.driver.getWindowHandle();
+
+    // Open a fresh tab and shift Selenium's focus into it
+    await this.driver.switchTo().newWindow('window');
+
+    const googleSearch = new GoogleSearch(this.driver)
+    await googleSearch.openGoogleSearch()
+});
+
+When('User searches for {string} in the new tab or window', async function (searchWord) {
     const googleSearch = new GoogleSearch(this.driver)
     await googleSearch.searchForString(searchWord)
     await this.driver.wait(
