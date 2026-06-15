@@ -451,3 +451,20 @@ await driver.actions()
   .keyUp(Key.CONTROL)
   .perform();
 ```
+
+# Selenium JavaScript Exceptions Matrix
+
+A quick-reference troubleshooting matrix for handling core automation exceptions thrown by the `selenium-webdriver` package in Node.js.
+
+---
+
+| Exception Class Name | Root Cause | Best Resolution Strategy |
+| :--- | :--- | :--- |
+| **`NoSuchElementError`** | `driver.findElement()` cannot locate the target element with the provided locator. | Use `driver.wait(until.elementLocated(...))` before attempting interaction. |
+| **`StaleElementReferenceError`** | The element was previously located, but the DOM updated, unmounted, or refreshed. | Relocate the element from the DOM again before interacting with it. |
+| **`ElementNotInteractableError`** | The element exists in the DOM but is hidden, covered, or disabled on the viewport. | Use `driver.wait(until.elementIsVisible(...))` or scroll the element into view. |
+| **`TimeoutError`** | An explicit wait operation (`driver.wait()`) exceeded its max duration threshold. | Increase the timeout budget or investigate application slowness. |
+| **`NoSuchWindowError`** /<br>**`NoSuchFrameError`** | The script attempted to switch focus to a tab, window, or iframe that has been closed or deleted. | Validate the active window handles list or use `until.ableToSwitchToFrame`. |
+| **`UnexpectedAlertOpenError`** | A native browser alert/modal intercepted the execution path, blocking standard DOM interactions. | Intercept the dialog using `driver.switchTo().alert()` to either accept or dismiss it. |
+| **`JavascriptError`** | Custom script injected via `driver.executeScript()` threw a runtime syntax or execution failure. | Test your raw JavaScript string inside the browser's developer console first. |
+| **`NoSuchSessionError`** | Commands were issued after `driver.quit()` was executed, or the browser crashed. | Verify test hooks framework ordering to ensure commands do not run after session disposal. |
