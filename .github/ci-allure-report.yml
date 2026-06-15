@@ -1,0 +1,70 @@
+# .github/workflows/ci-allure-report.yml
+name: Selenium Cucumber Allure CI Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  automation-suite:
+    name: Execute Tests & Publish Allure Dashboard
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Fetch source code from the repository
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      # 2. Setup Node.js runtime environment with dependency caching
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # 3. Setup Java runtime (Required by Allure CLI to generate HTML dashboards)
+      - name: Setup Java Environment (Allure Requirement)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # 4. Perform clean installation of dependencies from package.json
+      - name: Install Project Dependencies
+        run: npm ci
+
+      # 5. Verify/Install Chrome browser inside the Ubuntu runner environment
+      - name: Setup Chrome Browser
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      # 6. Execute Cucumber Tests mapping environment configurations to DriverConfig
+      - name: Run E2E Headless Automation Tests
+        run: npm run test:allure:headless
+        env:
+          CI: true
+          EXECUTION_ENV: local
+          BROWSER: chrome
+          HEADLESS: true
+
+      # 7. Compile Allure raw XML/JSON artifacts into a static web dashboard
+      - name: Generate Visual Allure HTML Report
+        if: always() # Compile reports even if test script execution steps fail
+        run: npm run allure:generate
+
+      # 8. Deploy the static dashboard directly to GitHub Pages
+      - name: Publish Allure Report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./allure-report
