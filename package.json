@@ -19,5 +19,8 @@
     "dotenv": "^16.4.5",
     "multiple-cucumber-html-reporter": "^3.8.0",
     "selenium-webdriver": "^4.22.0"
+  },
+  "dependencies": {
+    "winston": "^3.19.0"
   }
 }

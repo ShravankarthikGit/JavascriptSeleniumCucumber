@@ -6,10 +6,11 @@ import HomePage from '../../pages/home.page.js';
 import LoginPage from '../../pages/login.page.js';
 import MyAccountPage from '../../pages/myAccount.page.js';
 import DriverConfig from '../../config/driver.config.js';
-
+import logger from '../../config/logger.js'; 
 
 Given('the user navigates to login page', async function () {
     // Instantiate the page object using the browser driver context shared from hooks.js
+    logger.info("the user navigates to login page...");
     const homePage = new HomePage(this.driver);
 
     // Perform actions
